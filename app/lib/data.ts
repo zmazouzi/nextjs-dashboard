@@ -11,6 +11,18 @@ import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+
+export async function fetchDashboardData() { 
+  try {
+    const data = await Promise.all([fetchRevenue, fetchLatestInvoices, fetchCardData]);
+    return { revenue: data[0], latestInvoices: data[1], cardData: data[2]};
+    
+  } catch (error) {
+    console.log('Database Error', error);
+    throw new Error('Failed to fetch dashboard data');
+  }
+}
+
 export async function fetchRevenue() {
   try {
     // Artificially delay a response for demo purposes.
